@@ -44,6 +44,8 @@ var b2_fixtureContactFilterParticle = 1 << 16;
 /// particles.
 var b2_particleContactFilterParticle = 1 << 17;
 
+var b2ParticleHandle_index_offset = Offsets.b2ParticleHandle.index;
+
 /** @constructor */
 function b2ParticleColor(r, g, b, a) {
   if (r === undefined) {
@@ -80,4 +82,13 @@ function b2ParticleDef() {
   this.position = new b2Vec2();
   this.userData = 0;
   this.velocity = new b2Vec2();
+}
+
+/**@constructor*/
+function b2ParticleHandle(ptr) {
+  this.buffer = new DataView(Module.HEAPU8.buffer, ptr);
+}
+
+b2ParticleHandle.prototype.GetIndex = function() {
+  return this.buffer.getInt32(b2ParticleHandle_index_offset, true);
 }

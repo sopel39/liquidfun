@@ -18,6 +18,10 @@ double b2ParticleSystem_CreateParticle(void* particleSystem,
   return ((b2ParticleSystem*)particleSystem)->CreateParticle(def);
 }
 
+const void* b2ParticleSystem_GetParticleHandleFromIndex(void* particleSystem, double index) {
+  return ((b2ParticleSystem*)particleSystem)->GetParticleHandleFromIndex((int)index);
+}
+
 // Shapes array is not currently supported for b2ParticleSystems
 
 void* b2ParticleSystem_GetColorBuffer(void* particleSystem) {

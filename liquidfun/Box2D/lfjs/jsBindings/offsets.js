@@ -64,6 +64,9 @@ var Offsets = {
     isSensor: 38,
     userData: 40
   },
+  b2ParticleHandle: {
+    index: 8
+  },
   b2ParticleGroup: {
     system: 0,
     firstIndex: 4,

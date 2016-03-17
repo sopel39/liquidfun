@@ -146,6 +146,7 @@ B2PARTICLEGROUP = \
 
 B2PARTICLESYSTEM = \
 	'_b2ParticleSystem_CreateParticle', \
+	'_b2ParticleSystem_GetParticleHandleFromIndex', \
 	'_b2ParticleSystem_GetColorBuffer', \
 	'_b2ParticleSystem_GetParticleCount', \
 	'_b2ParticleSystem_GetParticleLifetime', \
@@ -249,4 +250,4 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	]"
 
 bindings.js:
-	$(EMSCRIPTEN)/emcc -I../ -o lf_core.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O2 --js-library callbacks.js
+	$(EMSCRIPTEN)/emcc -I../ -o lf_core.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O2  --memory-init-file 0 --js-library callbacks.js
