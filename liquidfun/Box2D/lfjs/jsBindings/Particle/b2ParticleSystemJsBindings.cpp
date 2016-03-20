@@ -1,6 +1,23 @@
 #include<Box2D/Box2D.h>
 #include <stdio.h>
 
+extern "C" {
+  extern bool b2ParticleSystemQueryAABB(const void* particleSystem, double index);
+}
+
+class ParticleQueryAABBCallback : public b2QueryCallback {
+public:
+  bool ReportFixture(b2Fixture* fixture) {
+    return false;
+  }
+    
+  bool ReportParticle(const b2ParticleSystem* particleSystem, int32 index) {
+    return b2ParticleSystemQueryAABB(particleSystem, index);
+  }
+};
+
+ParticleQueryAABBCallback particleQueryAABBCallback;
+
 double b2ParticleSystem_CreateParticle(void* particleSystem,
     //particleDef
     double colorR, double colorB, double colorG, double colorA,
@@ -62,4 +79,12 @@ void b2ParticleSystem_SetParticleLifetime(void* particleSystem, double index, do
 
 void b2ParticleSystem_SetRadius(void* particleSystem, double radius) {
   ((b2ParticleSystem*)particleSystem)->SetRadius(radius);
+}
+
+void b2ParticleSystem_QueryShapeAABB(void* particleSystem, void* shape,
+                                     void* xf) {
+  ((b2ParticleSystem*)particleSystem)->QueryShapeAABB(
+      &particleQueryAABBCallback,
+      *((b2Shape*)shape),
+      *((b2Transform*)xf));
 }

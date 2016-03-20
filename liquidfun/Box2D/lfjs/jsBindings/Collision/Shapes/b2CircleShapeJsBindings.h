@@ -33,4 +33,13 @@ double b2CircleShape_DestroyParticlesInShape(
     double xfpX, double xfpY, double xfqS,
     double xfqC);
 }
+
+void b2CircleShape_QueryShapeAABB(
+    void* particleSystem,
+    // Circle
+    double px, double py,
+    double radius,
+    // xf
+    double xfpX, double xfpY, double xfqS,
+    double xfqC);
 #endif

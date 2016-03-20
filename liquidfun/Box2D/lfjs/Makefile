@@ -95,7 +95,8 @@ B2CHAINSHAPE = \
 B2CIRCLESHAPE = \
 	'_b2CircleShape_CreateFixture', \
 	'_b2CircleShape_CreateParticleGroup', \
-	'_b2CircleShape_DestroyParticlesInShape'
+	'_b2CircleShape_DestroyParticlesInShape', \
+	'_b2CircleShape_QueryShapeAABB'
 
 B2COLLISION = \
 	'_b2Manifold_GetPointCount'

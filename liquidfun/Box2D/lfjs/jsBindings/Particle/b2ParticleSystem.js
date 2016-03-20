@@ -1,3 +1,8 @@
+b2ParticleSystem.QueryAABB = function(ptr, index) {
+    var particleSystem = _particleSystems[ptr];
+    return particleSystem.queryAABBCallback.ReportParticle(particleSystem, index);
+};
+
 /**@constructor*/
 function b2ParticleSystemDef() {
   // Initialize physical coefficients to the maximum values that
@@ -67,6 +72,8 @@ var b2ParticleSystem_SetParticleLifetime =
 var b2ParticleSystem_SetRadius =
   Module.cwrap('b2ParticleSystem_SetRadius', 'null', ['number', 'number']);
 
+var _particleSystems = [];
+
 /** @constructor */
 function b2ParticleSystem(ptr) {
   this.dampingStrength = 1.0;
@@ -76,6 +83,7 @@ function b2ParticleSystem(ptr) {
   this.particleGroups = [];
   this.radius = 1.0;
   this.gravityScale = 1.0;
+  _particleSystems[ptr] = this;
 }
 
 b2ParticleSystem.prototype.CreateParticle = function(pd) {
@@ -153,4 +161,9 @@ b2ParticleSystem.prototype.SetParticleLifetime = function(index, lifetime) {
 b2ParticleSystem.prototype.SetRadius = function(radius) {
   this.radius = radius;
   b2ParticleSystem_SetRadius(this.ptr, radius);
+};
+
+b2ParticleSystem.prototype.QueryShapeAABB = function(callback, shape, xf) {
+  this.queryAABBCallback = callback;
+  shape._QueryShapeAABB(this, xf);
 };

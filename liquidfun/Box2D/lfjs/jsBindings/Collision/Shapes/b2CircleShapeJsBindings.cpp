@@ -1,4 +1,5 @@
 #include <Box2D/Box2D.h>
+#include "../../Particle/b2ParticleSystemJsBindings.h"
 
 // create fixture from circle
 void* b2CircleShape_CreateFixture(
@@ -84,4 +85,24 @@ double b2CircleShape_DestroyParticlesInShape(
   xf.q.s = xfqS;
   xf.q.c = xfqC;
   return ((b2ParticleSystem*)particleSystem)->DestroyParticlesInShape(circle, xf);
+}
+
+void b2CircleShape_QueryShapeAABB(
+    void* particleSystem,
+    // Circle
+    double px, double py,
+    double radius,
+    // xf
+    double xfpX, double xfpY, double xfqS,
+    double xfqC) {
+  b2CircleShape circle;
+  circle.m_p.Set(px, py);
+  circle.m_radius = radius;
+    
+  b2Transform xf;
+  xf.p.Set(xfpX, xfpY);
+  xf.q.s = xfqS;
+  xf.q.c = xfqC;
+    
+  b2ParticleSystem_QueryShapeAABB(particleSystem, &circle, &xf);
 }
