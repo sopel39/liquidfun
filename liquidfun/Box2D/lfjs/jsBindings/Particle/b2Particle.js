@@ -86,9 +86,43 @@ function b2ParticleDef() {
 
 /**@constructor*/
 function b2ParticleHandle(ptr) {
+  this.ptr = ptr;
   this.buffer = new DataView(Module.HEAPU8.buffer, ptr);
 }
 
 b2ParticleHandle.prototype.GetIndex = function() {
   return this.buffer.getInt32(b2ParticleHandle_index_offset, true);
+}
+
+/**@constructor*/
+function b2ParticleHandleGroup(particleSystem, particleHandles) {
+  this.particleSystem = particleSystem;
+  this.particleHandles = particleHandles.slice();
+  this.count = particleHandles.length;
+  
+  // Create array of pointers that reference each row in the data
+  var pointers = new Uint32Array(particleHandles.length);
+  for (var i = 0; i < particleHandles.length; i++) {
+    pointers[i] = particleHandles[i].ptr;
+  }
+  
+  // Allocate bytes needed for the array of pointers
+  var nPointerBytes = pointers.length * pointers.BYTES_PER_ELEMENT;
+  this.ptr = Module._malloc(nPointerBytes);
+  
+  // Copy array of pointers to Emscripten heap
+  var pointerHeap = new Uint8Array(Module.HEAPU8.buffer, this.ptr, nPointerBytes);
+  pointerHeap.set(new Uint8Array(pointers.buffer));
+}
+
+b2ParticleHandleGroup.prototype.ApplyForce = function(force) {
+  this.particleSystem._ParticleHandleGroupApplyForce(this, force);
+}
+
+b2ParticleHandleGroup.prototype.GetPosition = function() {
+  return this.particleSystem._ParticleHandleGroupGetPosition(this);
+}
+
+b2ParticleHandleGroup.prototype.Destroy = function() {
+  Module._free(this.ptr);
 }

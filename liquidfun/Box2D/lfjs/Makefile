@@ -158,7 +158,9 @@ B2PARTICLESYSTEM = \
 	'_b2ParticleSystem_SetGravityScale', \
 	'_b2ParticleSystem_SetMaxParticleCount', \
 	'_b2ParticleSystem_SetParticleLifetime', \
-	'_b2ParticleSystem_SetRadius'
+	'_b2ParticleSystem_SetRadius', \
+	'_b2ParticleSystem_ParticleHandlesApplyForce', \
+	'_b2ParticleSystem_ParticleHandlesGetPosition'
 
 B2POLYGONSHAPE = \
 	'_b2PolygonShape_CreateFixture_3', \

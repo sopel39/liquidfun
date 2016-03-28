@@ -88,3 +88,32 @@ void b2ParticleSystem_QueryShapeAABB(void* particleSystem, void* shape,
       *((b2Shape*)shape),
       *((b2Transform*)xf));
 }
+
+void b2ParticleSystem_ParticleHandlesApplyForce(
+    void* particleSystem,
+    void** particleHandles, double nParticles,
+    double forceX, double forceY) {
+  forceX /= nParticles;
+  forceY /= nParticles;
+  for (int i = 0; i < (int) nParticles; ++i) {
+    b2ParticleHandle* particleHandle = ((b2ParticleHandle**)particleHandles)[i];
+    ((b2ParticleSystem*)particleSystem)->ParticleApplyForce(particleHandle->GetIndex(), b2Vec2(forceX, forceY));
+  }
+}
+
+void b2ParticleSystem_ParticleHandlesGetPosition(
+    void* particleSystem,
+    void** particleHandles, double nParticles,
+    float* arr) {
+  float sumX = 0.0;
+  float sumY = 0.0;
+  b2Vec2* positionBuffer = ((b2ParticleSystem*)particleSystem)->GetPositionBuffer();
+  for (int i = 0; i < (int) nParticles; ++i) {
+    b2ParticleHandle* particleHandle = ((b2ParticleHandle**)particleHandles)[i];
+    int particleIndex = particleHandle->GetIndex();
+    sumX += positionBuffer[particleIndex].x;
+    sumY += positionBuffer[particleIndex].y;
+  }
+  arr[0] = sumX / nParticles;
+  arr[1] = sumY / nParticles;
+}

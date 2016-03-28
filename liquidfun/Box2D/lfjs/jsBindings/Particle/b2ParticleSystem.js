@@ -72,6 +72,14 @@ var b2ParticleSystem_SetParticleLifetime =
 var b2ParticleSystem_SetRadius =
   Module.cwrap('b2ParticleSystem_SetRadius', 'null', ['number', 'number']);
 
+var b2ParticleSystem_ParticleHandlesApplyForce =
+  Module.cwrap('b2ParticleSystem_ParticleHandlesApplyForce', 'null',
+  ['number', 'number', 'number', 'number', 'number'])
+
+var b2ParticleSystem_ParticleHandlesGetPosition =
+  Module.cwrap('b2ParticleSystem_ParticleHandlesGetPosition', 'null',
+  ['number', 'number', 'number', 'number'])
+
 var _particleSystems = [];
 
 /** @constructor */
@@ -166,4 +174,18 @@ b2ParticleSystem.prototype.SetRadius = function(radius) {
 b2ParticleSystem.prototype.QueryShapeAABB = function(callback, shape, xf) {
   this.queryAABBCallback = callback;
   shape._QueryShapeAABB(this, xf);
+};
+
+b2ParticleSystem.prototype._ParticleHandleGroupApplyForce = function(particleHandleGroup, force) {
+  b2ParticleSystem_ParticleHandlesApplyForce(
+    this.ptr, particleHandleGroup.ptr, particleHandleGroup.count,
+    force.x, force.y);
+};
+
+b2ParticleSystem.prototype._ParticleHandleGroupGetPosition = function(particleHandleGroup) {
+  b2ParticleSystem_ParticleHandlesGetPosition(
+    this.ptr, particleHandleGroup.ptr, particleHandleGroup.count,
+    _vec2Buf.byteOffset);
+  var result = new Float32Array(_vec2Buf.buffer, _vec2Buf.byteOffset, _vec2Buf.length);
+  return new b2Vec2(result[0], result[1]);
 };

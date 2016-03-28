@@ -22,5 +22,14 @@ double b2ParticleSystem_CreateParticle(void* particleSystem,
     void b2ParticleSystem_SetRadius(void* particleSystem, double radius);
     
     void b2ParticleSystem_QueryShapeAABB(void* particleSystem, void* shape, void* xf);
+    
+    void b2ParticleSystem_ParticleHandlesApplyForce(
+        void* particleSystem,
+        void** particleHandles, double nParticles,
+        double forceX, double forceY);
+    void b2ParticleSystem_ParticleHandlesGetPosition(
+        void* particleSystem,
+        void** particleHandles, double nParticles,
+        float* arr);
 }
 #endif
