@@ -159,6 +159,7 @@ B2PARTICLESYSTEM = \
 	'_b2ParticleSystem_SetMaxParticleCount', \
 	'_b2ParticleSystem_SetParticleLifetime', \
 	'_b2ParticleSystem_SetRadius', \
+	'_b2ParticleSystem_QueryAABB', \
 	'_b2ParticleSystem_ParticleHandlesApplyForce', \
 	'_b2ParticleSystem_ParticleHandlesGetPosition'
 

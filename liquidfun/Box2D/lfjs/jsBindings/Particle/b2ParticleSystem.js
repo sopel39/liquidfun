@@ -72,6 +72,10 @@ var b2ParticleSystem_SetParticleLifetime =
 var b2ParticleSystem_SetRadius =
   Module.cwrap('b2ParticleSystem_SetRadius', 'null', ['number', 'number']);
 
+var b2ParticleSystem_QueryAABB =
+  Module.cwrap('b2ParticleSystem_QueryAABB', 'null',
+  ['number', 'number', 'number' ,'number' ,'number']);
+
 var b2ParticleSystem_ParticleHandlesApplyForce =
   Module.cwrap('b2ParticleSystem_ParticleHandlesApplyForce', 'null',
   ['number', 'number', 'number', 'number', 'number'])
@@ -169,6 +173,12 @@ b2ParticleSystem.prototype.SetParticleLifetime = function(index, lifetime) {
 b2ParticleSystem.prototype.SetRadius = function(radius) {
   this.radius = radius;
   b2ParticleSystem_SetRadius(this.ptr, radius);
+};
+
+b2ParticleSystem.prototype.QueryAABB = function(callback, aabb) {
+  this.queryAABBCallback = callback;
+  b2ParticleSystem_QueryAABB(this.ptr, aabb.lowerBound.x, aabb.lowerBound.y,
+                             aabb.upperBound.x, aabb.upperBound.y);
 };
 
 b2ParticleSystem.prototype.QueryShapeAABB = function(callback, shape, xf) {

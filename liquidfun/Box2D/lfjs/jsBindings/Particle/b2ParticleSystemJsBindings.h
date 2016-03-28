@@ -20,7 +20,11 @@ double b2ParticleSystem_CreateParticle(void* particleSystem,
     void b2ParticleSystem_SetMaxParticleCount(void* particleSystem, double count);
     void b2ParticleSystem_SetParticleLifetime(void* particleSystem, double index, double lifetime);
     void b2ParticleSystem_SetRadius(void* particleSystem, double radius);
-    
+  
+    void b2ParticleSystem_QueryAABB(
+        void* particleSystem,
+        double aabbLowerBoundX, double aabbLowerBoundY,
+        double aabbUpperBoundX, double aabbUpperBoundY);
     void b2ParticleSystem_QueryShapeAABB(void* particleSystem, void* shape, void* xf);
     
     void b2ParticleSystem_ParticleHandlesApplyForce(

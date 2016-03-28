@@ -81,6 +81,16 @@ void b2ParticleSystem_SetRadius(void* particleSystem, double radius) {
   ((b2ParticleSystem*)particleSystem)->SetRadius(radius);
 }
 
+void b2ParticleSystem_QueryAABB(
+    void* particleSystem,
+    double aabbLowerBoundX, double aabbLowerBoundY,
+    double aabbUpperBoundX, double aabbUpperBoundY) {
+  b2AABB aabb;
+  aabb.lowerBound = b2Vec2(aabbLowerBoundX, aabbLowerBoundY);
+  aabb.upperBound = b2Vec2(aabbUpperBoundX, aabbUpperBoundY);
+  ((b2ParticleSystem*)particleSystem)->QueryAABB(&particleQueryAABBCallback, aabb);
+}
+
 void b2ParticleSystem_QueryShapeAABB(void* particleSystem, void* shape,
                                      void* xf) {
   ((b2ParticleSystem*)particleSystem)->QueryShapeAABB(
