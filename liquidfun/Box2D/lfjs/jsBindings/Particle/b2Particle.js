@@ -123,6 +123,17 @@ b2ParticleHandleGroup.prototype.GetPosition = function() {
   return this.particleSystem._ParticleHandleGroupGetPosition(this);
 }
 
+b2ParticleHandleGroup.prototype.SetColor = function(r, g, b, a) {
+  var colorBuffer = this.particleSystem.GetColorBuffer();
+  for (i = 0; i < this.particleHandles.length; i++) {
+    var index = this.particleHandles[i].GetIndex() * 4;
+    colorBuffer[index] = r;
+    colorBuffer[index + 1] = g;
+    colorBuffer[index + 2] = b;
+    colorBuffer[index + 3] = a;
+  }
+}
+
 b2ParticleHandleGroup.prototype.Destroy = function() {
   Module._free(this.ptr);
 }
