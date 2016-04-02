@@ -1,6 +1,6 @@
-b2ParticleSystem.QueryAABB = function(ptr, index) {
+b2ParticleSystem.Query = function(ptr, index) {
     var particleSystem = _particleSystems[ptr];
-    return particleSystem.queryAABBCallback.ReportParticle(particleSystem, index);
+    return particleSystem.queryCallback.ReportParticle(particleSystem, index);
 };
 
 /**@constructor*/
@@ -176,14 +176,19 @@ b2ParticleSystem.prototype.SetRadius = function(radius) {
 };
 
 b2ParticleSystem.prototype.QueryAABB = function(callback, aabb) {
-  this.queryAABBCallback = callback;
+  this.queryCallback = callback;
   b2ParticleSystem_QueryAABB(this.ptr, aabb.lowerBound.x, aabb.lowerBound.y,
                              aabb.upperBound.x, aabb.upperBound.y);
 };
 
 b2ParticleSystem.prototype.QueryShapeAABB = function(callback, shape, xf) {
-  this.queryAABBCallback = callback;
+  this.queryCallback = callback;
   shape._QueryShapeAABB(this, xf);
+};
+
+b2ParticleSystem.prototype.QueryShape = function(callback, shape, xf) {
+  this.queryCallback = callback;
+  shape._QueryShape(this, xf);
 };
 
 b2ParticleSystem.prototype._ParticleHandleGroupApplyForce = function(particleHandleGroup, force) {

@@ -19,7 +19,7 @@ mergeInto(LibraryManager.library, {
                                    normalX, normalY, fraction) {
     return b2World.RayCast(fixturePtr, pointX, pointY, normalX, normalY, fraction);
   },
-  b2ParticleSystemQueryAABB: function(particleSystem, index) {
-    return b2ParticleSystem.QueryAABB(particleSystem, index);
+  b2ParticleSystemQuery: function(particleSystem, index) {
+    return b2ParticleSystem.Query(particleSystem, index);
   }
 });

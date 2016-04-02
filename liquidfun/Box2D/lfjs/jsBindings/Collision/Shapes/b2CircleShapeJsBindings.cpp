@@ -106,3 +106,23 @@ void b2CircleShape_QueryShapeAABB(
     
   b2ParticleSystem_QueryShapeAABB(particleSystem, &circle, &xf);
 }
+
+void b2CircleShape_QueryShape(
+    void* particleSystem,
+    // Circle
+    double px, double py,
+    double radius,
+    // xf
+    double xfpX, double xfpY, double xfqS,
+    double xfqC) {
+  b2CircleShape circle;
+  circle.m_p.Set(px, py);
+  circle.m_radius = radius;
+  
+  b2Transform xf;
+  xf.p.Set(xfpX, xfpY);
+  xf.q.s = xfqS;
+  xf.q.c = xfqC;
+  
+  b2ParticleSystem_QueryShape(particleSystem, &circle, &xf);
+}

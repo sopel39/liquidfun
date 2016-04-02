@@ -39,6 +39,14 @@ var b2CircleShape_QueryShapeAABB =
      // transform
      'number', 'number', 'number', 'number']);
 
+var b2CircleShape_QueryShape =
+Module.cwrap('b2CircleShape_QueryShape', 'null',
+    ['number',
+     //circle
+     'number', 'number', 'number',
+     // transform
+     'number', 'number', 'number', 'number']);
+
 /**@constructor*/
 function b2CircleShape() {
   this.position = new b2Vec2();
@@ -82,6 +90,14 @@ b2CircleShape.prototype._DestroyParticlesInShape = function(ps, xf) {
 
 b2CircleShape.prototype._QueryShapeAABB = function(ps, xf) {
   b2CircleShape_QueryShapeAABB(ps.ptr,
+    // circle
+    this.position.x, this.position.y, this.radius,
+    // transform
+    xf.p.x, xf.p.y, xf.q.s, xf.q.c);
+}
+
+b2CircleShape.prototype._QueryShape = function(ps, xf) {
+  b2CircleShape_QueryShape(ps.ptr,
     // circle
     this.position.x, this.position.y, this.radius,
     // transform

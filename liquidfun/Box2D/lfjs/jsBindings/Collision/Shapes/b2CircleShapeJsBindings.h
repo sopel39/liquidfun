@@ -42,4 +42,13 @@ void b2CircleShape_QueryShapeAABB(
     // xf
     double xfpX, double xfpY, double xfqS,
     double xfqC);
+
+void b2CircleShape_QueryShape(
+    void* particleSystem,
+    // Circle
+    double px, double py,
+    double radius,
+    // xf
+    double xfpX, double xfpY, double xfqS,
+    double xfqC);
 #endif

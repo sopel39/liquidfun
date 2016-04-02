@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 extern "C" {
-  extern bool b2ParticleSystemQueryAABB(const void* particleSystem, double index);
+  extern bool b2ParticleSystemQuery(const void* particleSystem, double index);
 }
 
 class ParticleQueryAABBCallback : public b2QueryCallback {
@@ -12,11 +12,33 @@ public:
   }
     
   bool ReportParticle(const b2ParticleSystem* particleSystem, int32 index) {
-    return b2ParticleSystemQueryAABB(particleSystem, index);
+    return b2ParticleSystemQuery(particleSystem, index);
   }
 };
 
 ParticleQueryAABBCallback particleQueryAABBCallback;
+
+class ParticleQueryShapeCallback : public b2QueryCallback {
+public:
+  ParticleQueryShapeCallback(const b2Shape* m_shape, const b2Transform* m_transform) :
+    m_shape(m_shape), m_transform(m_transform) {}
+  
+  bool ReportFixture(b2Fixture* fixture) {
+    return false;
+  }
+  
+  bool ReportParticle(const b2ParticleSystem* particleSystem, int32 index) {
+    if (m_shape->TestPoint(*m_transform, particleSystem->GetPositionBuffer()[index])) {
+      return b2ParticleSystemQuery(particleSystem, index);
+    }
+    
+    return true;
+  }
+  
+private:
+  const b2Shape* m_shape;
+  const b2Transform* m_transform;
+};
 
 double b2ParticleSystem_CreateParticle(void* particleSystem,
     //particleDef
@@ -95,6 +117,16 @@ void b2ParticleSystem_QueryShapeAABB(void* particleSystem, void* shape,
                                      void* xf) {
   ((b2ParticleSystem*)particleSystem)->QueryShapeAABB(
       &particleQueryAABBCallback,
+      *((b2Shape*)shape),
+      *((b2Transform*)xf));
+}
+
+void b2ParticleSystem_QueryShape(void* particleSystem, void* shape, void* xf) {
+  ParticleQueryShapeCallback callback = ParticleQueryShapeCallback(
+      (b2Shape*)shape,
+      (b2Transform*)xf);
+  ((b2ParticleSystem*)particleSystem)->QueryShapeAABB(
+      &callback,
       *((b2Shape*)shape),
       *((b2Transform*)xf));
 }
