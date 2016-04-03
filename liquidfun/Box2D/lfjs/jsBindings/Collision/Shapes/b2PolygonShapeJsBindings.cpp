@@ -240,6 +240,47 @@ void* b2PolygonShape_CreateFixture_8(
   return ((b2Body*)body)->CreateFixture(&def);
 }
 
+void* b2PolygonShape_CreateParticleGroup(
+    void* particleSystem,
+    // ParticleGroupDef
+    double angle, double angularVelocity, double colorR,
+    double colorG, double colorB, double colorA, double flags, double group,
+    double groupFlags, double lifetime, double linearVelocityX, double linearVelocityY,
+    double positionX, double positionY, double positionData, double particleCount,
+    double strength, double stride, double userData,
+    // shape
+    float* vertices, double length) {
+  b2ParticleGroupDef def;
+  def.angle = angle;
+  def.angularVelocity = angularVelocity;
+  def.color = b2ParticleColor(colorR, colorG, colorB, colorA);
+  def.flags = flags;
+  def.group = NULL;
+  def.groupFlags = groupFlags;
+  def.lifetime = lifetime;
+  def.linearVelocity = b2Vec2(linearVelocityX, linearVelocityY);
+  def.position = b2Vec2(positionX, positionY);
+  def.positionData = NULL;
+  def.particleCount = particleCount;
+  def.shapeCount = 0;
+  def.shapes = NULL;
+  def.strength = strength;
+  def.stride = stride;
+  def.userData = (double*)&userData;
+
+  int count = length / 2;
+  b2Vec2 points[b2_maxPolygonVertices];
+  for (int i = 0, j = 0; i < length; i += 2, j++) {
+    points[j] = b2Vec2(vertices[i], vertices[i+1]);
+  }
+
+  b2PolygonShape p;
+  p.Set(points, count);
+  def.shape = &p;
+
+  return ((b2ParticleSystem*)particleSystem)->CreateParticleGroup(def);
+}
+
 // Create b2ParticleSystem from 4 sided polygon
 void* b2PolygonShape_CreateParticleGroup_4(
     void* particleSystem,
@@ -285,6 +326,30 @@ void* b2PolygonShape_CreateParticleGroup_4(
   def.shape = &p;
 
   return ((b2ParticleSystem*)particleSystem)->CreateParticleGroup(def);
+}
+
+double b2PolygonShape_DestroyParticlesInShape(
+    void* particleSystem,
+    //polygon
+    float* vertices, double length,
+    // xf
+    double xfpX, double xfpY, double xfqS,
+    double xfqC) {
+  int count = length / 2;
+  b2Vec2 points[b2_maxPolygonVertices];
+  for (int i = 0, j = 0; i < length; i += 2, j++) {
+    points[j] = b2Vec2(vertices[i], vertices[i+1]);
+  }
+
+  b2PolygonShape p;
+  p.Set(points, count);
+
+  b2Transform xf;
+  xf.p.Set(xfpX, xfpY);
+  xf.q.s = xfqS;
+  xf.q.c = xfqC;
+
+  return ((b2ParticleSystem*)particleSystem)->DestroyParticlesInShape(p, xf);
 }
 
 double b2PolygonShape_DestroyParticlesInShape_4(

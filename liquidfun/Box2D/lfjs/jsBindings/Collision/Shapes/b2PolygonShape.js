@@ -81,6 +81,21 @@ var b2PolygonShape_CreateFixture_8 =
       'number', 'number']);
 
 // particle group creation wrappers
+var b2PolygonShape_CreateParticleGroup =
+  Module.cwrap('b2PolygonShape_CreateParticleGroup', 'number',
+    ['number',
+      // particleGroupDef
+      'number', 'number', 'number',
+      'number', 'number', 'number',
+      'number', 'number', 'number',
+      'number', 'number', 'number',
+      'number', 'number', 'number',
+      'number', 'number', 'number',
+      'number',
+      // polygon
+      'number', 'number'
+    ]);
+
 var b2PolygonShape_CreateParticleGroup_4 =
   Module.cwrap('b2PolygonShape_CreateParticleGroup_4', 'number',
     ['number',
@@ -100,6 +115,15 @@ var b2PolygonShape_CreateParticleGroup_4 =
     ]);
 
 // particle group destruction wrappers
+var b2PolygonShape_DestroyParticlesInShape =
+  Module.cwrap('b2PolygonShape_DestroyParticlesInShape', 'number',
+    ['number',
+     //polygon shape
+     'number', 'number',
+     // xf
+     'number', 'number', 'number',
+     'number']);
+
 var b2PolygonShape_DestroyParticlesInShape_4 =
   Module.cwrap('b2PolygonShape_DestroyParticlesInShape_4', 'number',
     ['number',
@@ -271,8 +295,6 @@ b2PolygonShape.prototype._CreateFixture = function(body, fixtureDef) {
 b2PolygonShape.prototype._CreateParticleGroup = function(particleSystem, pgd) {
   var v = this.vertices;
   switch (v.length) {
-    case 3:
-      break;
     case 4:
       return b2PolygonShape_CreateParticleGroup_4(
         particleSystem.ptr,
@@ -290,14 +312,46 @@ b2PolygonShape.prototype._CreateParticleGroup = function(particleSystem, pgd) {
         v[2].x, v[2].y,
         v[3].x, v[3].y);
       break;
+    default:
+      var dataLength = v.length * 2;
+      var data = new Float32Array(dataLength);
+
+      for (var i = 0, j = 0; i < dataLength; i += 2, j++) {
+        data[i] = v[j].x;
+        data[i+1] = v[j].y;
+      }
+
+      // Get data byte size, allocate memory on Emscripten heap, and get pointer
+      var nDataBytes = data.length * data.BYTES_PER_ELEMENT;
+      var dataPtr = Module._malloc(nDataBytes);
+
+      // Copy data to Emscripten heap (directly accessed from Module.HEAPU8)
+      var dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, nDataBytes);
+      dataHeap.set(new Uint8Array(data.buffer));
+
+      var result = b2PolygonShape_CreateParticleGroup(
+        particleSystem.ptr,
+        // particle group def
+        pgd.angle,  pgd.angularVelocity, pgd.color.r,
+        pgd.color.g, pgd.color.b, pgd.color.a,
+        pgd.flags, pgd.group.ptr, pgd.groupFlags,
+        pgd.lifetime, pgd.linearVelocity.x, pgd.linearVelocity.y,
+        pgd.position.x, pgd.position.y, pgd.positionData,
+        pgd.particleCount,  pgd.strength, pgd.stride,
+        pgd.userData,
+        // polygon
+        dataHeap.byteOffset, data.length);
+
+      // Free memory
+      Module._free(dataHeap.byteOffset);
+      return result;
+      break;
   }
 };
 
 b2PolygonShape.prototype._DestroyParticlesInShape = function(ps, xf) {
   var v = this.vertices;
   switch (v.length) {
-    case 3:
-      break;
     case 4:
       return b2PolygonShape_DestroyParticlesInShape_4(
         ps.ptr,
@@ -309,6 +363,35 @@ b2PolygonShape.prototype._DestroyParticlesInShape = function(ps, xf) {
         // xf
         xf.p.x, xf.p.y,
         xf.q.s, xf.q.c);
+      break;
+    default:
+      var dataLength = v.length * 2;
+      var data = new Float32Array(dataLength);
+
+      for (var i = 0, j = 0; i < dataLength; i += 2, j++) {
+        data[i] = v[j].x;
+        data[i+1] = v[j].y;
+      }
+
+      // Get data byte size, allocate memory on Emscripten heap, and get pointer
+      var nDataBytes = data.length * data.BYTES_PER_ELEMENT;
+      var dataPtr = Module._malloc(nDataBytes);
+
+      // Copy data to Emscripten heap (directly accessed from Module.HEAPU8)
+      var dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, nDataBytes);
+      dataHeap.set(new Uint8Array(data.buffer));
+
+      var result = b2PolygonShape_DestroyParticlesInShape(
+        ps.ptr,
+        // polygon
+        dataHeap.byteOffset, data.length,
+        // xf
+        xf.p.x, xf.p.y,
+        xf.q.s, xf.q.c);
+
+      // Free memory
+      Module._free(dataHeap.byteOffset);
+      return result;
       break;
   }
 };

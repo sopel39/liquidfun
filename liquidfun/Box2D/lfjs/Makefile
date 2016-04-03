@@ -171,7 +171,9 @@ B2POLYGONSHAPE = \
 	'_b2PolygonShape_CreateFixture_6', \
 	'_b2PolygonShape_CreateFixture_7', \
   '_b2PolygonShape_CreateFixture_8', \
+	'_b2PolygonShape_CreateParticleGroup', \
 	'_b2PolygonShape_CreateParticleGroup_4', \
+	'_b2PolygonShape_DestroyParticlesInShape', \
 	'_b2PolygonShape_DestroyParticlesInShape_4'
 
 B2PRISMATICJOINT = \

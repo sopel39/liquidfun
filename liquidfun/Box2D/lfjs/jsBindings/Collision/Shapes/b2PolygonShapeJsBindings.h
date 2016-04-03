@@ -91,6 +91,17 @@ void* b2PolygonShape_CreateFixture_8(
 
 
 // functions to create particle group from polygon
+void* b2PolygonShape_CreateParticleGroup(
+    void* particleSystem,
+    // ParticleGroupDef
+    double angle, double angularVelocity, double colorR,
+    double colorG, double colorB, double colorA, double flags, double group,
+    double groupFlags, double lifetime, double linearVelocityX, double linearVelocityY,
+    double positionX, double positionY, double positionData, double particleCount,
+    double strength, double stride, double userData,
+    // shape
+    float* vertices, double length);
+
 void* b2PolygonShape_CreateParticleGroup_4(
     void* particleSystem,
     // ParticleGroupDef
@@ -106,6 +117,14 @@ void* b2PolygonShape_CreateParticleGroup_4(
     double x3, double y3);
 
 // functions to destroy particles in shape
+double b2PolygonShape_DestroyParticlesInShape(
+    void* particleSystem,
+    //polygon
+    float* vertices, double length,
+    // xf
+    double xfpX, double xfpY, double xfqS,
+    double xfqC);
+
 double b2PolygonShape_DestroyParticlesInShape_4(
     void* particleSystem,
     //polygon
